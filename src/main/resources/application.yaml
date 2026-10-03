@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: gnax-identity-service
+
+  config:
+    # for local development, you can use the config server running on localhost
+    import: "configserver:http://localhost:30888"
+    # for production, you can use the config server running on the Kubernetes cluster
+    # import: "configserver:http://gnax-config-server:8888"
+
+  cloud:
+    config:
+      username: ${CONFIG_SERVER_USERNAME}
+      password: ${CONFIG_SERVER_PASSWORD}
