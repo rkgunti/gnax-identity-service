@@ -13,12 +13,4 @@ spring:
       username: ${CONFIG_SERVER_USERNAME}
       password: ${CONFIG_SERVER_PASSWORD}
 
-gnax:
-  jwt:
-    issuer: gnax-identity-service
-    access-token-ttl: 15m
-    refresh-token-ttl: 7d
-    # PEM contents; supply via config server / env in real environments.
-    # If blank, an ephemeral key pair is generated (dev only).
-    private-key: ${JWT_PRIVATE_KEY:}
-    public-key: ${JWT_PUBLIC_KEY:}
+
