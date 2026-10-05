@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;
 
 /**
- * privateKey / publicKey are PEM contents (PKCS#8 / X.509). If both are blank an
+ * privateKey / publicKey are a file path (or file:/classpath: URL) or inline PEM contents (PKCS#8 / X.509). If both are blank an
  * ephemeral key pair is generated at startup (local development only).
  */
 @ConfigurationProperties(prefix = "gnax.jwt")

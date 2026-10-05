@@ -36,8 +36,8 @@ public class JwtConfig {
         RSAPrivateKey privateKey;
         if (hasText(props.privateKey()) && hasText(props.publicKey())) {
             KeyFactory kf = KeyFactory.getInstance("RSA");
-            privateKey = (RSAPrivateKey) kf.generatePrivate(new PKCS8EncodedKeySpec(decodePem(props.privateKey())));
-            publicKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(decodePem(props.publicKey())));
+            privateKey = (RSAPrivateKey) kf.generatePrivate(new PKCS8EncodedKeySpec(decodePem(readKey(props.privateKey()))));
+            publicKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(decodePem(readKey(props.publicKey()))));
         } else {
             log.warn("No gnax.jwt.private-key/public-key configured; generating an EPHEMERAL RSA key pair. "
                     + "Tokens will be invalid after restart. Do not use in production.");
@@ -63,6 +63,19 @@ public class JwtConfig {
 
     private static boolean hasText(String s) {
         return s != null && !s.isBlank();
+    }
+
+    private static String readKey(String value) throws java.io.IOException {
+        String v = value.trim();
+        if (v.startsWith("-----BEGIN")) {
+            return v;
+        }
+        org.springframework.core.io.Resource res = v.startsWith("classpath:") || v.startsWith("file:")
+                ? new org.springframework.core.io.DefaultResourceLoader().getResource(v)
+                : new org.springframework.core.io.FileSystemResource(v);
+        try (java.io.InputStream in = res.getInputStream()) {
+            return new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
     }
 
     private static byte[] decodePem(String pem) {
